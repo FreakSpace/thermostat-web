@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_cron',
+    'django_crontab',
     'ts'
 ]
 
@@ -122,6 +122,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-CRON_CLASSES = [
-    "arduino.cron.GetData",
+CRONJOBS = [
+    ('*/1 * * * *', 'arduino.serial_read.get_data_from_box')
 ]

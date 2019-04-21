@@ -1,5 +1,9 @@
 import socket
-import sys
+import re
+from ts.models import LogThermostat
+
+pattern = "temp=([0-9.]+); co2=([0-9.]+); hum=([0-9.]+); on=([01]); current_state=([0-9])"
+
 
 def get_data_from_box():
     # Create a TCP/IP socket
@@ -24,9 +28,16 @@ def get_data_from_box():
         while amount_received < amount_expected:
             data = sock.recv(1024)
             amount_received += len(data)
-            print(f'::: {data.decode()}')
+
+            res = re.match(pattern, data.decode())
+            obj = LogThermostat(
+                temp=float(res.group(1)),
+                co2=float(res.group(2)),
+                on=bool(int(res.group(4))),
+                current_state=res.group(5)
+            )
+            obj.save()
 
     finally:
 
         sock.close()
-

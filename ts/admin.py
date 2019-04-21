@@ -1,3 +1,5 @@
 from django.contrib import admin
+from .models import LogThermostat
 
-# Register your models here.
+
+admin.site.register(LogThermostat)
