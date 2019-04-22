@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Головна сторінка
+{% endblock %}
+
+{% block additional_script_or_css %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+{% endblock %}
+
+
+{% block jumbotron %}
+    <div class="container">
+        <div class="jumbotron mt-3">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>Останнє оновлення ({{ last_record.time }})</h4>
+                    <hr>
+                    <li>Стан термостату:
+                        {% if last_record.thermostat_state %}
+                            <span class="badge badge-success">Увімкнено</span>
+                        {% else %}
+                            <span class="badge badge-secondary">Вимкнено</span>
+                        {% endif %}
+                    </li>
+
+                    <li>Виконувана робота:
+                        {% if last_record.current_state == "1" %}
+                            <span class="badge badge-danger">Нагрівання</span>
+                        {% elif last_record.current_state == "2" %}
+                            <span class="badge badge-primary">Охолодження</span>
+                        {% else %}
+                            <span class="badge badge-secondary">Не працює</span>
+                        {% endif %}
+                    </li>
+                    <hr>
+                    <li>Температура зараз:
+                        <span class="badge badge-info">{{ last_record.temp }}°C</span>
+                    </li>
+                    <li>Встановлена температура:
+                        <span class="badge badge-info">{{ last_record.set_temp }}°C</span>
+                    </li>
+                    <hr>
+                    <li>CO2 зараз:
+                        <span class="badge badge-dark">{{ last_record.co2 }}</span>
+                    </li>
+                    <li>Встановлений рівень CO2:
+                        <span class="badge badge-dark">{{ last_record.set_co2 }}</span>
+                    </li>
+                    <hr>
+                    <li>Освітленість:
+                        {% if last_record.light %}
+                            <span class="badge badge-warning">Увімкнено</span>
+                        {% else %}
+                            <span class="badge badge-secondary">Вимкнено</span>
+                        {% endif %}
+                    </li>
+                    <li>Колір встановленого освітлення:
+                        <span class="light-color"
+                              style="background-color: rgb({{ last_record.light_R }}, {{ last_record.light_G }}, {{ last_record.light_B }})"
+                        >&nbsp;</span>
+                    </li>
+                    <hr>
+                    <a class="btn btn-sm btn-primary" href="/docs/4.3/components/navbar/" role="button">Переглянути всі
+                        записи</a>
+                </div>
+
+                <div class="col-md-6">
+                    <h4>Діапазон даних</h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+
+                            <div class="form-group">
+                                <div class="input-group date" id="datetimepicker_from" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                           data-target="#datetimepicker_from"/>
+                                    <div class="input-group-append" data-target="#datetimepicker_from"
+                                         data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker_from').datetimepicker({
+                                    locale: 'ru',
+                                    defaultDate: '{{ start_date|date:"Y-m-d H:i" }}',
+                                    format: "DD / MM / YYYY  |  HH:mm",
+                                    icons: {
+                                        time: "fa fa-clock-o",
+                                        date: "fa fa-calendar",
+                                        up: "fa fa-arrow-up",
+                                        down: "fa fa-arrow-down"
+                                    }
+                                });
+                            });
+                        </script>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="input-group date" id="datetimepicker_to" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input"
+                                           data-target="#datetimepicker_to"/>
+                                    <div class="input-group-append" data-target="#datetimepicker_to"
+                                         data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker_to').datetimepicker({
+                                    locale: 'ru',
+                                    defaultDate: '{{ end_date|date:"Y-m-d H:i" }}',
+                                    format: "DD / MM / YYYY  |  HH:mm",
+                                    icons: {
+                                        time: "fa fa-clock-o",
+                                        date: "fa fa-calendar",
+                                        up: "fa fa-arrow-up",
+                                        down: "fa fa-arrow-down"
+                                    }
+                                });
+                            });
+                        </script>
+                    </div>
+                    <button id="get-data-button" class="btn btn-sm btn-success">Вибрати в даному діапазоні</button>
+                    <button id="clean-data-button" class="btn btn-sm btn-warning">Очистити вибране</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block charts %}
+    <div class="container">
+        <div class="col-md-12">
+            <div><h3>Загальний графік</h3></div>
+            <canvas id="temperatureChart"></canvas>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div><h3>Рівень СО2</h3></div>
+                <canvas id="co2Chart"></canvas>
+            </div>
+            <div class="col-md-6">
+                <div><h3>Освітленість</h3></div>
+                <canvas id="lightChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        var temperatureElement = document.getElementById('temperatureChart').getContext('2d');
+        var temp_chart = new Chart(temperatureElement, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                datasets: [{
+                    label: 'Температура по-факту',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.temp }},
+                        {% endfor %}
+                    ],
+                    {#yAxisID: 'left-y-axis'#}
+                }, {
+                    label: 'Встановлена температура',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(111, 34, 132)',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.set_temp }},
+                        {% endfor %}
+                    ],
+                    {#yAxisID: 'right-y-axis'#}
+                }, {
+                    label: 'Стан освітленості',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(234, 230, 29)',
+                    data: [
+                        {% for item in qset %}
+                            {% if item.light %}
+                                1,
+                            {% else %}
+                                0,
+                            {% endif %}
+                        {% endfor %}
+                    ],
+                    yAxisID: 'right-y-axis'
+                }],
+                labels: [
+                    {% for item in qset %}
+                        "{{ item.time }}",
+                    {% endfor %}
+                ]
+            },
+
+            // Configuration options go here
+            options: {
+                scales: {
+                    yAxes: [{
+                        id: 'left-y-axis',
+                        type: 'linear',
+                        position: 'left'
+                    }, {
+                        id: 'right-y-axis',
+                        type: 'linear',
+                        position: 'right'
+                    }]
+                }
+            }
+        });
+
+    </script>
+    <script>
+
+        var co2Element = document.getElementById('co2Chart').getContext('2d');
+        var co2_chart = new Chart(co2Element, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                datasets: [{
+                    label: 'Рівень СО2 зараз',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(20, 20, 20)',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.co2 }},
+                        {% endfor %}
+                    ],
+                }, {
+                    label: 'Встановлений рівень СО2',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(10, 110, 240)',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.set_co2 }},
+                        {% endfor %}
+                    ],
+                }],
+                labels: [
+                    {% for item in qset %}
+                        "{{ item.time }}",
+                    {% endfor %}
+                ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    </script>
+    <script>
+
+        var lightElement = document.getElementById('lightChart').getContext('2d');
+        var light_chart = new Chart(lightElement, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                datasets: [{
+                    label: 'Стан освітленості',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(234, 230, 29)',
+                    data: [
+                        {% for item in qset %}
+                            {% if item.light %}
+                                1,
+                            {% else %}
+                                0,
+                            {% endif %}
+                        {% endfor %}
+                    ],
+                }],
+                labels: [
+                    {% for item in qset %}
+                        "{{ item.time }}",
+                    {% endfor %}
+                ]
+            },
+
+            // Configuration options go here
+            options: {}
+        });
+    </script>
+{% endblock %}
