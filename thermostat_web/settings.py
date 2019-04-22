@@ -123,5 +123,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CRONJOBS = [
-    ('*/1 * * * *', 'arduino.serial_read.get_data_from_box')
+    ('*/1 * * * *', 'arduino.serial_read.get_data_from_box', '>> /tmp/schedule_job.log')
 ]

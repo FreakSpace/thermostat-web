@@ -2,7 +2,7 @@ import socket
 import re
 from ts.models import LogThermostat
 
-pattern = "temp=([0-9.]+); co2=([0-9.]+); hum=([0-9.]+); on=([01]); current_state=([0-9])"
+pattern = r"([\d.]+)"
 
 
 def get_data_from_box():
@@ -28,13 +28,20 @@ def get_data_from_box():
         while amount_received < amount_expected:
             data = sock.recv(1024)
             amount_received += len(data)
-
-            res = re.match(pattern, data.decode())
+            print(data.decode())
+            res = re.findall(pattern, data.decode())
+            print(res[2])
             obj = LogThermostat(
-                temp=float(res.group(1)),
-                co2=float(res.group(2)),
-                on=bool(int(res.group(4))),
-                current_state=res.group(5)
+                thermostat_state=bool(int(res[0])),
+                current_state=res[1],
+                temp=float(res[2]),
+                set_temp=float(res[3]),
+                co2=float(res[4]),
+                set_co2=float(res[5]),
+                light=bool(int(res[6])),
+                light_R=int(res[7]),
+                light_G=int(res[8]),
+                light_B=int(res[9]),
             )
             obj.save()
 
