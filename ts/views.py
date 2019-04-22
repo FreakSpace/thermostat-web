@@ -8,6 +8,12 @@ class DataListView(ListView):
     context_object_name = "qset"
     model = LogThermostat
     template_name = 'ts/index.html'
+    queryset = LogThermostat.objects.all()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['last_record'] = self.queryset.last()
+        return data
 
     def get_queryset(self):
         start_date_text = self.request.GET.get("start_date")
@@ -29,12 +35,12 @@ class DataListView(ListView):
             start_date = datetime.today() - timedelta(days=1)
             end_date = datetime.now()
 
-        data = LogThermostat.objects.filter(time__range=(start_date, end_date))
-        if len(data) >= 30:
-            step = len(data) // 30
-            buff = 0
-            while buff <= len(data):
-                if buff % step:
-                    data.e
-        return
+        data = self.queryset.filter(time__range=(start_date, end_date))
+        # if len(data) >= 30:
+        #     step = len(data) // 30
+        #     buff = 0
+        #     while buff <= len(data):
+        #         if buff % step:
+        #             data.e
+        return data
 
