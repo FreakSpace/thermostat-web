@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views.generic import ListView
 from .models import LogThermostat
 from datetime import datetime, timedelta
@@ -10,15 +9,7 @@ class DataListView(ListView):
     template_name = 'ts/index.html'
     queryset = LogThermostat.objects.all()
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data['last_record'] = self.queryset.last()
-        return data
-
-    def get_queryset(self):
-        start_date_text = self.request.GET.get("start_date")
-        end_date_text = self.request.GET.get("end_date")
-
+    def _range_date(self, start_date_text=None, end_date_text=None):
         if start_date_text and end_date_text:
             start_date = datetime.strptime(start_date_text, "%Y-%m-%d-%H-%M")
             end_date = datetime.strptime(end_date_text, "%Y-%m-%d-%H-%M")
@@ -32,8 +23,29 @@ class DataListView(ListView):
             start_date = end_date - timedelta(hours=1)
 
         else:
-            start_date = datetime.today() - timedelta(days=1)
+            start_date = datetime.today() - timedelta(hours=1)
             end_date = datetime.now()
+
+        return start_date, end_date
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        data = super().get_context_data(**kwargs)
+
+        start_date_text = self.request.GET.get("start_date")
+        end_date_text = self.request.GET.get("end_date")
+
+        start_date, end_date = self._range_date(start_date_text, end_date_text)
+        data['start_date'] = start_date
+        data['end_date'] = end_date
+
+        data['last_record'] = self.queryset.last()
+        return data
+
+    def get_queryset(self):
+        start_date_text = self.request.GET.get("start_date")
+        end_date_text = self.request.GET.get("end_date")
+
+        start_date, end_date = self._range_date(start_date_text, end_date_text)
 
         data = self.queryset.filter(time__range=(start_date, end_date))
         # if len(data) >= 30:

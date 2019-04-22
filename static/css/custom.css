@@ -5,3 +5,7 @@
     -moz-border-radius: 3px;
     border-radius: 3px;
 }
+
+.jumbotron {
+    padding: 2rem 2rem;
+}
