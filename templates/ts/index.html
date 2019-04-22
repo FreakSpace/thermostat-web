@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+{#    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.css">#}
+</head>
+<body>
+
+
+
+    <canvas id="myChart"></canvas>
+
+{#    {% for item in object_list %}#}
+{#        <li>{{ item.thermostat_state }}</li>#}
+{#        <li>{{ item.current_state }}</li>#}
+{#        <li>{{ item.temp }}</li>#}
+{#        <li>{{ item.set_temp }}</li>#}
+{#        <li>{{ item.co2 }}</li>#}
+{#        <li>{{ item.set_co2 }}</li>#}
+{#        <li>{{ item.light }}</li>#}
+{#        <li>{{ item.light_R }}</li>#}
+{#        <li>{{ item.light_G }}</li>#}
+{#        <li>{{ item.light_B }}</li>#}
+{#        <li>{{ item.time }}</li>#}
+{#    {% endfor %}#}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+            // The type of chart we want to create
+            type: 'line',
+
+            // The data for our dataset
+            data: {
+                datasets: [{
+                    label: 'Температура по-факту',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.temp }},
+                        {% endfor %}
+                    ],
+                    {#yAxisID: 'left-y-axis'#}
+                }, {
+                    label: 'Встановлена температура',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(111, 34, 132)',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.set_temp }},
+                        {% endfor %}
+                    ],
+                    {#yAxisID: 'right-y-axis'#}
+                }, {
+                    label: 'Освітленість',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(11, 255, 12)',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.light.to_bytes }},
+                        {% endfor %}
+                    ],
+                    {#yAxisID: 'right-y-axis'#}
+                }],
+                labels: [
+                    {% for item in qset %}
+                        "{{ item.time }}",
+                    {% endfor %}
+                ]
+            },
+
+            // Configuration options go here
+            options: {
+                scales: {
+                    yAxes: [{
+                        id: 'left-y-axis',
+                        type: 'linear',
+                        position: 'left'
+                    }, {
+                        id: 'right-y-axis',
+                        type: 'linear',
+                        position: 'right'
+                    }]
+                }
+            }
+        });
+    </script>
+
+
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.js" type="text/javascript"></script>#}
+</body>
+</html>
