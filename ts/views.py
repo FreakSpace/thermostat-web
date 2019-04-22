@@ -29,5 +29,12 @@ class DataListView(ListView):
             start_date = datetime.today() - timedelta(days=1)
             end_date = datetime.now()
 
-        return LogThermostat.objects.filter(time__range=(start_date, end_date))
+        data = LogThermostat.objects.filter(time__range=(start_date, end_date))
+        if len(data) >= 30:
+            step = len(data) // 30
+            buff = 0
+            while buff <= len(data):
+                if buff % step:
+                    data.e
+        return
 

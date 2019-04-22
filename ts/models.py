@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.db import models
 
 
@@ -17,7 +18,7 @@ class LogThermostat(models.Model):
     light_G = models.IntegerField("G", default=0)
     light_B = models.IntegerField("B", default=0)
 
-    time = models.DateTimeField(auto_now=True)
+    time = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.time.strftime('%Y-%m-%d %H:%M:%S')} | State: {'On' if self.thermostat_state else 'Off'} | t: {self.temp}" \
