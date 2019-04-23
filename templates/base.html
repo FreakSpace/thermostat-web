@@ -13,9 +13,7 @@
           href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css"/>
     <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" />
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script type="text/javascript"
             src="https://momentjs.com/downloads/moment.js"></script>
 
@@ -30,11 +28,12 @@
 </head>
 <body>
     {% block jumbotron %}
-
     {% endblock %}
 
     {% block charts %}
-
+    {% endblock %}
+    
+    {% block body %}
     {% endblock %}
 
     <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
@@ -45,11 +44,11 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Головна <span class="sr-only">(current)</span></a>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Головна <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Всі записи</a>
+                    <a class="nav-link" href="{% url 'all-data' %}">Всі записи</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link disabled" href="#">Встановлення програми</a>

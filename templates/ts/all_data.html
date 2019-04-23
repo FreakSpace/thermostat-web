@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th scope="col">id</th>
+                            <th scope="col">Час | дата</th>
+                            <th scope="col">Стан</th>
+                            <th scope="col">Темп.</th>
+                            <th scope="col">Рів. СО2</th>
+                            <th scope="col">Освітлення</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for record in records %}
+                            <tr data-value="{{ record.id }}">
+                                <th scope="row">{{ record.id }}</th>
+                                <td>{{ record.time|date:"H:i | d-m-Y" }}</td>
+                                <td>
+                                    {% if record.thermostat_state %}
+                                        On
+                                    {% else %}
+                                        Off
+                                    {% endif %}
+                                </td>
+                                <td>{{ record.temp }}</td>
+                                <td>{{ record.co2 }}</td>
+                                <td>
+                                    {% if record.light %}
+                                        On
+                                    {% else %}
+                                        Off
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="col-md-5 fix-block">
+                <div id="detail-data" class="jumbotron mt-3 not-visible">
+                    <li>id:
+                        <span class="badge badge-light" id="th-id"></span>  /  datetime:
+                        <span class="badge badge-light" id="th-date"></span>
+                    </li>
+                    <hr>
+                    <li>Стан термостату:
+                        <span class="badge" id="th-state"></span>
+                    </li>
+
+                    <li>Виконувана робота:
+                        <span class="badge" id="th-work"></span>
+                    </li>
+                    <hr>
+                    <li>Температура:
+                        <span class="badge badge-info" id="th-temp"></span>
+                    </li>
+                    <li>Встановлена температура:
+                        <span class="badge badge-info" id="th-set-t"></span>
+                    </li>
+                    <hr>
+                    <li>CO2 зараз:
+                        <span class="badge badge-dark" id="th-co2"></span>
+                    </li>
+                    <li>Встановлений рівень CO2:
+                        <span class="badge badge-dark" id="th-set-co2"></span>
+                    </li>
+                    <hr>
+                    <li>Освітленість:
+                        <span class="badge" id="th-light"></span>
+                    </li>
+                    <li>Колір встановленого освітлення:
+                        <span class="light-color" id="th-color-light">&nbsp</span>
+                    </li>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    {% if is_paginated %}
+        <div class="container">
+            <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            {% endif %}
+
+            {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active">
+                        <a class="page-link" href="">{{ i }} <span class="sr-only">(current)</span></a>
+                    </li>
+
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </li>
+            {% endif %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}
