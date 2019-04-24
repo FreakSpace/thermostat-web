@@ -7,7 +7,7 @@ class DataListView(ListView):
     context_object_name = "qset"
     model = Thermostat
     template_name = 'ts/index.html'
-    queryset = Thermostat.objects.all()
+    queryset = Thermostat.objects.filter(for_program=False)
 
     def __init__(self):
         self.all_records_number = 0
@@ -74,7 +74,8 @@ class DataListView(ListView):
 
         if start_date >= end_date:
             data['alert_code'] = 0
-            data['alerts'] = "Початкова дата та час не можуть бути більшими за кінцеві. <strong>Вибрано дані за останню годину</strong>"
+            data['alerts'] = "Початкова дата та час не можуть бути більшими за кінцеві. " \
+                             "<strong>Вибрано дані за останню годину</strong>"
 
         elif not self.all_records_number:
             data['alert_code'] = 1

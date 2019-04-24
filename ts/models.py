@@ -1,4 +1,3 @@
-from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -28,6 +27,8 @@ class Thermostat(models.Model):
 
     time = models.DateTimeField(auto_now_add=True)
 
+    for_program = models.BooleanField("Для використання програмою", default=False)
+
     def __str__(self):
         return f"{self.time.strftime('%Y-%m-%d %H:%M:%S')} | State: {'On' if self.thermostat_state else 'Off'} | t: {self.temp}" \
                f"{' | light:' + str(self.light) if self.light else ''}"
@@ -39,9 +40,16 @@ class Program(models.Model):
     author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+
 
 class FieldProgram(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    field = models.ForeignKey(Thermostat, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.program} | {self.field}"
 
 
 class LogUseProgram(models.Model):
