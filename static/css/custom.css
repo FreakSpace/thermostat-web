@@ -19,3 +19,9 @@
     right: 0;
     top: 20%;
 }
+
+.alert-position {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+}

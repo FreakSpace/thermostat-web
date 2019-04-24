@@ -1,4 +1,7 @@
 function formatDate(date) {
+    /*
+     * bringing the date and time in the appropriate format
+     */
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
         day = '' + d.getDate(),
@@ -14,18 +17,29 @@ function formatDate(date) {
     return [year, month, day, hours, minutes].join('-');
 }
 
+
+/* Functions to get data by date */
 $("#get-data-button").on("click", function () {
     var from_date = formatDate($("#datetimepicker_from").datetimepicker('viewDate')._d);
     var to_date = formatDate($("#datetimepicker_to").datetimepicker('viewDate')._d);
-    window.location.replace("/?start_date=" + from_date + "&end_date=" + to_date);
+    var to_reduce = $("#to_reduce").prop("checked");
+    window.location.replace("/?start_date=" + from_date + "&end_date=" + to_date + "&to_reduce=" + to_reduce);
 });
 
 $("#clean-data-button").on("click", function () {
     window.location.replace("/");
 });
 
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+
+
 
 $("tr").on("click", function () {
+    /*
+     * Ajax request for single record data
+     */
     var _id = $(this).data("value");
     $.ajax({
         url: "single/?id=" + _id,
