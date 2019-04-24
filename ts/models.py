@@ -1,8 +1,16 @@
 from django.utils import timezone
 from django.db import models
+from django.contrib.auth.models import User
 
 
-class LogThermostat(models.Model):
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username
+
+
+class Thermostat(models.Model):
     thermostat_state = models.BooleanField("Стан термостату", default=False)
     current_state = models.CharField("Стан термостату", max_length=20)
 
@@ -23,3 +31,20 @@ class LogThermostat(models.Model):
     def __str__(self):
         return f"{self.time.strftime('%Y-%m-%d %H:%M:%S')} | State: {'On' if self.thermostat_state else 'Off'} | t: {self.temp}" \
                f"{' | light:' + str(self.light) if self.light else ''}"
+
+
+class Program(models.Model):
+    name = models.CharField(max_length=100)
+    desc = models.TextField(max_length=1000, blank=True, null=True)
+    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    is_private = models.BooleanField(default=False)
+
+
+class FieldProgram(models.Model):
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+
+
+class LogUseProgram(models.Model):
+    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    datetime = models.DateTimeField(auto_now_add=True)

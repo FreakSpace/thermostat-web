@@ -1,5 +1,6 @@
 from django.urls import path
-from .views import DataListView, AllDataView, get_single
+from .views.home import DataListView
+from .views.all_records import AllDataView, get_single
 
 urlpatterns = [
     path('', DataListView.as_view(), name='home'),
