@@ -151,7 +151,28 @@
             </div>
         </div>
     </div>
+{% endblock %}
 
+
+{% block script %}
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker_from').datetimepicker({
+                locale: 'ru',
+                defaultDate: '{{ start_date|date:"Y-m-d H:i" }}',
+                format: "DD / MM / YYYY  |  HH:mm",
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker_to').datetimepicker({
+                locale: 'ru',
+                defaultDate: '{{ end_date|date:"Y-m-d H:i" }}',
+                format: "DD / MM / YYYY  |  HH:mm",
+            });
+        });
+    </script>
 
     <script>
         var temperatureElement = document.getElementById('temperatureChart').getContext('2d');
@@ -291,28 +312,6 @@
 
             // Configuration options go here
             options: {}
-        });
-    </script>
-{% endblock %}
-
-
-{% block script %}
-    <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker_from').datetimepicker({
-                locale: 'ru',
-                defaultDate: '{{ start_date|date:"Y-m-d H:i" }}',
-                format: "DD / MM / YYYY  |  HH:mm",
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker_to').datetimepicker({
-                locale: 'ru',
-                defaultDate: '{{ end_date|date:"Y-m-d H:i" }}',
-                format: "DD / MM / YYYY  |  HH:mm",
-            });
         });
     </script>
 {% endblock %}
