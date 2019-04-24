@@ -1,6 +1,6 @@
 import socket
 import re
-from ts.models import LogThermostat
+from ts.models import Thermostat
 
 pattern = r"([\d.]+)"
 
@@ -31,7 +31,7 @@ def get_data_from_box():
             print(data.decode())
             res = re.findall(pattern, data.decode())
             print(res[2])
-            obj = LogThermostat(
+            obj = Thermostat(
                 thermostat_state=bool(int(res[0])),
                 current_state=res[1],
                 temp=float(res[2]),

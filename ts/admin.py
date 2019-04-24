@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import LogThermostat
+from .models import Thermostat
 
 
-admin.site.register(LogThermostat)
+admin.site.register(Thermostat)
