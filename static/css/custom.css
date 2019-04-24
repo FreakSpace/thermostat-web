@@ -9,3 +9,19 @@
 .jumbotron {
     padding: 2rem 2rem;
 }
+
+.not-visible {
+    display: none;
+}
+
+.fix-block {
+    position: fixed;
+    right: 0;
+    top: 20%;
+}
+
+.alert-position {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+}
