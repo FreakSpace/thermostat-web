@@ -7,7 +7,7 @@ class DataListView(ListView):
     context_object_name = "qset"
     model = Thermostat
     template_name = 'ts/index.html'
-    queryset = Thermostat.objects.filter(for_program=False)
+    queryset = Thermostat.objects.all()
 
     def __init__(self):
         self.all_records_number = 0

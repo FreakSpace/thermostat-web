@@ -46,8 +46,16 @@ class Program(models.Model):
 
 class FieldProgram(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    field = models.ForeignKey(Thermostat, on_delete=models.CASCADE)
+    thermostat_state = models.BooleanField("Стан термостату", default=False)
+    set_temp = models.FloatField("Встановити температура", default=0)
+    set_co2 = models.FloatField("Встановити рівень CO2", blank=True, null=True)
+    light = models.BooleanField("Стан освітлення", default=False)
 
+    light_R = models.IntegerField("R", default=0)
+    light_G = models.IntegerField("G", default=0)
+    light_B = models.IntegerField("B", default=0)
+
+    duration = models.CharField("Тривалість виконання частини програми", max_length=20, default="")
     def __str__(self):
         return f"{self.program} | {self.field}"
 

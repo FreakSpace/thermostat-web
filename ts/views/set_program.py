@@ -2,6 +2,10 @@ from django.views.generic import ListView
 from ts.models import Program, FieldProgram
 
 
+def create_or_edit_program(request):
+    pass
+
+
 class ProgramListView(ListView):
     context_object_name = "qset"
     model = Program
@@ -12,8 +16,6 @@ class ProgramListView(ListView):
         data = super().get_context_data(**kwargs)
 
         data["programs"] = self.queryset
-
-
 
         return data
 

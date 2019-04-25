@@ -5,7 +5,7 @@ from django.http import JsonResponse
 
 class GetSingle(DetailView):
     model = Thermostat
-    queryset = Thermostat.objects.filter(for_program=False)
+    queryset = Thermostat.objects.all()
 
     def get(self, request, *args, **kwargs):
         data = {}
