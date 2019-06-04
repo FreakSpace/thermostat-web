@@ -10,6 +10,7 @@ class Thermostat(models.Model):
     temp = models.FloatField("Температура", default=0)
     set_temp = models.FloatField("Встановлена температура", default=0)
 
+    co2_control = models.BooleanField("Стан контролю СО2", default=False)
     co2 = models.FloatField("Рівень CO2", blank=True, null=True)
     set_co2 = models.FloatField("Встановлений рівень CO2", blank=True, null=True)
 
@@ -42,9 +43,10 @@ class Phase(models.Model):
     program = models.ForeignKey(Program, blank=True, null=True, on_delete=models.CASCADE)
     phase_name = models.CharField(max_length=100, blank=True, null=True)
     thermostat_state = models.BooleanField("Стан термостату", default=False)
-    set_temp = models.FloatField("Встановити температуру", default=0)
+    set_temp = models.IntegerField("Встановити температуру", default=0)
 
-    set_co2 = models.FloatField("Встановити рівень CO2", blank=True, null=True)
+    co2_control = models.BooleanField("Увімкнути контроль СО2", default=False)
+    set_co2 = models.IntegerField("Встановити рівень CO2", default=0)
 
     light = models.BooleanField("Стан освітлення", default=False)
     light_mode = models.BooleanField("RGB: True, UV: False", default=False)

@@ -33,17 +33,18 @@ def run_program(request):
     phases = Phase.objects.filter(program_id=id_elem)
 
     for phase in phases:
-        program_text += str(phase.order_execution) + ": "
-        program_text += str(phase.duration_d) + ", "
-        program_text += str(phase.duration_h) + ", "
-        program_text += str(phase.duration_m) + "; "
-        program_text += str(phase.thermostat_state) + "; "
-        program_text += str(phase.set_temp) + "; "
-        program_text += str(phase.set_co2) + "; "
-        program_text += str(phase.light) + ", "
-        program_text += str(phase.light_mode) + ", "
-        program_text += str(phase.light_R) + ", "
-        program_text += str(phase.light_G) + ", "
+        program_text += str(phase.order_execution) + ";"
+        program_text += str(phase.duration_d) + ";"
+        program_text += str(phase.duration_h) + ";"
+        program_text += str(phase.duration_m) + ";"
+        program_text += str(int(phase.thermostat_state)) + ";"
+        program_text += str(phase.set_temp) + ";"
+        program_text += str(int(phase.co2_control)) + ";"
+        program_text += str(phase.set_co2) + ";"
+        program_text += str(int(phase.light)) + ";"
+        program_text += str(int(phase.light_mode)) + ";"
+        program_text += str(phase.light_R) + ";"
+        program_text += str(phase.light_G) + ";"
         program_text += str(phase.light_B) + ";\n"
 
     try:
