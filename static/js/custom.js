@@ -32,7 +32,11 @@ $("#clean-data-button").on("click", function () {
 
 $(function () {
   $('[data-toggle="popover"]').popover()
-})
+});
+
+$('#program-modal').on('shown.bs.modal', function () {
+  $('#myInput').trigger('focus')
+});
 
 
 

@@ -3,13 +3,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return self.user.username
-
-
 class Thermostat(models.Model):
     thermostat_state = models.BooleanField("Стан термостату", default=False)
     current_state = models.CharField("Стан термостату", max_length=20)
@@ -21,6 +14,7 @@ class Thermostat(models.Model):
     set_co2 = models.FloatField("Встановлений рівень CO2", blank=True, null=True)
 
     light = models.BooleanField("Стан освітлення", default=False)
+    light_mode = models.BooleanField("RGB: True, UV: False", default=False)
 
     light_R = models.IntegerField("R", default=0)
     light_G = models.IntegerField("G", default=0)
@@ -36,15 +30,40 @@ class Thermostat(models.Model):
 class Program(models.Model):
     name = models.CharField(max_length=100)
     desc = models.TextField(max_length=1000, blank=True, null=True)
-    author = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
+    last_use = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Program: {self.name}"
 
 
-class FieldProgram(models.Model):
-    program = models.ForeignKey(Program, on_delete=models.CASCADE)
+class Phase(models.Model):
+    program = models.ForeignKey(Program, blank=True, null=True, on_delete=models.CASCADE)
+    phase_name = models.CharField(max_length=100, blank=True, null=True)
+    thermostat_state = models.BooleanField("Стан термостату", default=False)
+    set_temp = models.FloatField("Встановити температуру", default=0)
+
+    set_co2 = models.FloatField("Встановити рівень CO2", blank=True, null=True)
+
+    light = models.BooleanField("Стан освітлення", default=False)
+    light_mode = models.BooleanField("RGB: True, UV: False", default=False)
+
+    light_R = models.IntegerField("R", default=0)
+    light_G = models.IntegerField("G", default=0)
+    light_B = models.IntegerField("B", default=0)
+
+    duration_d = models.IntegerField("Тривалість, дні", default=0)
+    duration_h = models.IntegerField("Тривалість, години", default=0)
+    duration_m = models.IntegerField("Тривалість, хвилини", default=0)
+
+    order_execution = models.IntegerField("Порядок виконання", blank=True, null=True)
+
+    def __str__(self):
+        return f"Program: {self.program} | Phase: {self.phase_name}"
 
 
 class LogUseProgram(models.Model):
     program = models.ForeignKey(Program, on_delete=models.CASCADE)
-    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     datetime = models.DateTimeField(auto_now_add=True)

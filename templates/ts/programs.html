@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block jumbotron %}
+    <div class="container">
+        <div class="jumbotron mt-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <form action="">
+                        <input type="text">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+
+            {% for program in programs %}
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <ul class="nav nav-pills card-header-pills">
+                                <li class="nav-item">
+                                    <a href="{% url 'single-program' program.id %}" class="btn btn-primary">До програми-></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">{{ program.name }}</h5>
+                            last use: {{ program.last_use }} | author: {{ program.author }}
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+
+{% endblock %}

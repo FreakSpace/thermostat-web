@@ -39,6 +39,9 @@
     {% block alert %}
     {% endblock %}
     
+    {% block modal %}
+    {% endblock %}
+    
     <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
         <a class="navbar-brand" href="#">FreakSpace</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
@@ -54,7 +57,7 @@
                     <a class="nav-link" href="{% url 'all-data' %}">Всі записи</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Встановлення програми</a>
+                    <a class="nav-link" href="{% url 'programs' %}">Встановлення програми</a>
                 </li>
 
             </ul>

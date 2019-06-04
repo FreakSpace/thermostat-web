@@ -9,12 +9,13 @@ class DataListView(ListView):
     template_name = 'ts/index.html'
     queryset = Thermostat.objects.all()
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         self.all_records_number = 0
         self.got_records_number = 0
         self.step_record = 0
 
-    def _range_date(self, start_date_text=None, end_date_text=None):
+    @staticmethod
+    def _range_date(start_date_text=None, end_date_text=None):
         if start_date_text and end_date_text:
             start_date = datetime.strptime(start_date_text, "%Y-%m-%d-%H-%M")
             end_date = datetime.strptime(end_date_text, "%Y-%m-%d-%H-%M")
@@ -64,7 +65,6 @@ class DataListView(ListView):
         start_date, end_date = self._range_date(start_date_text, end_date_text)
         data['start_date'] = start_date
         data['end_date'] = end_date
-
 
         data['last_record'] = self.queryset.last()
 

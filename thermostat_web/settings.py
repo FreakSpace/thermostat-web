@@ -126,5 +126,5 @@ STATICFILES_DIRS = (
 )
 
 CRONJOBS = [
-    ('*/1 * * * *', 'arduino.serial_read.get_data_from_box', '>> /tmp/schedule_job.log')
+    ('*/1 * * * *', 'arduino.serial_read', '>> /tmp/schedule_job.log')
 ]

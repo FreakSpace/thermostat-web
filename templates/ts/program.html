@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block jumbotron %}
+    <div class="container">
+        <div class="jumbotron mt-3">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>{{ program.name }}</h2>
+                    <p class="text-secondary">{{ program.desc }}</p>
+                    <hr>
+                    <h6>Автор програми: {{ program.author }} | Останнє використання:
+                        {% if program.last_use %}
+                            {{ program.last_use }}
+                        {% else %}
+                            Програма не використовувалась
+                        {% endif %}
+                    </h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <button class="navbar-brand btn disabled">Фази:</button>
+
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                </ul>
+
+                <button class="btn btn-outline-warning my-2 my-sm-0" data-toggle="modal"
+                        data-target="#exampleModal">Додати фазу
+                </button> &nbsp;
+                <button class="btn btn-outline-success my-2 my-sm-0">Активувати</button> &nbsp;
+                <button class="btn btn-outline-danger my-2 my-sm-0">Зупинити</button>
+            </div>
+        </nav>
+    </div>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+
+            {% for mod in phases %}
+                <div class="col-md-4">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>
+                                <span class="badge badge-secondary">{{ mod.order_execution }}</span> {{ mod.phase_name }}
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <li>Стан термостату:
+                                {% if mod.thermostat_state %}
+                                    <span class="badge badge-success">Увімкнено</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">Вимкнено</span>
+                                {% endif %}
+                            </li>
+
+
+                            <li>Встановлена температура:
+                                <span class="badge badge-info">{{ mod.set_temp }}°C</span>
+                            </li>
+
+                            <li>Встановлений рівень CO2:
+                                <span class="badge badge-dark">{{ mod.set_co2 }}</span>
+                            </li>
+                            <li>Освітленість:
+                                {% if mod.light %}
+                                    <span class="badge badge-warning">Увімкнено</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">Вимкнено</span>
+                                {% endif %}
+                            </li>
+                            <li>Колір встановленого освітлення:
+                                <span class="light-color"
+                                      style="background-color: rgb({{ mod.light_R }}, {{ mod.light_G }}, {{ mod.light_B }})"
+                                >&nbsp;</span>
+                            </li>
+                        </div>
+
+
+                    </div>
+                </div>
+            {% endfor %}
+            <div class="col-md-12">
+                <hr>
+                <h4>Неактивні фази:</h4>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block modal %}
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Додати фазу</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <form action="">
+
+                        <div class="form-group">
+                            <label for="phase-name">Назва фази</label>
+                            <input type="text" class="form-control" id="phase-name"
+                                   placeholder="введіть назву..">
+                        </div>
+                        <hr>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="termostat_state" checked>
+                            <label class="form-check-label" for="termostat_state">Увімкнути термостат</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="phase-name">Температура (8-60)</label>
+                            <input type="number" max="60" min="8" class="form-control" id="phase-name"
+                                   placeholder="встановити температуру..">
+                        </div>
+                        <hr>
+                        <fieldset disabled>
+                            <div class="form-group">
+                                <label for="phase-name">Рівень CO2</label>
+                                <input type="number" class="form-control disabled" id="phase-name"
+                                       placeholder="рівень СО2..">
+                            </div>
+                        </fieldset>
+                        <hr>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" id="termostat_state" checked>
+                            <label class="form-check-label" for="termostat_state">Освітленість</label>
+                        </div>
+                        <fieldset class="form-group">
+                            <legend class="col-form-label pt-0">Тип освітлення</legend>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios1"
+                                       value="option1" checked>
+                                <label class="form-check-label" for="gridRadios1">
+                                    RGB
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gridRadios" id="gridRadios2"
+                                       value="option2">
+                                <label class="form-check-label" for="gridRadios2">
+                                    Ультра-фіолет
+                                </label>
+                            </div>
+                            <hr>
+                            <div class="form-check">
+
+                                <input class="jscolor {onFineChange:'update(this)'}  form-control" value="8FD6FF">
+
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript"
+            src="{% static 'js/jscolor.js' %}"></script>
+    <script>
+        function update(picker) {
+
+            document.getElementById('rgb').innerHTML =
+                Math.round(picker.rgb[0]) + ', ' +
+                Math.round(picker.rgb[1]) + ', ' +
+                Math.round(picker.rgb[2]);
+        }
+    </script>
+{% endblock %}
