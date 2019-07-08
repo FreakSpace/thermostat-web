@@ -1,6 +1,29 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
+{% block alert %}
+    <div class="alert alert-position alert-dismissible fade alert-success" id="success-alert" role="alert">
+        Програма надіслана на виконання
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="alert alert-position alert-dismissible fade alert-danger" id="not-success-alert" role="alert">
+        Помилка відсилання програми на виконання, сервіс роботи з USB портом не працює!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+     <div class="alert alert-position alert-dismissible fade alert-warning" id="stop-program-alert" role="alert">
+        Надіслано запит на зупинку програми!
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+{% endblock %}
+
 {% block jumbotron %}
     <div class="container">
         <div class="jumbotron mt-3">
@@ -33,8 +56,10 @@
                 <button class="btn btn-outline-warning my-2 my-sm-0" data-toggle="modal"
                         data-target="#exampleModal">Додати фазу
                 </button> &nbsp;
-                <button class="btn btn-outline-success my-2 my-sm-0">Активувати</button> &nbsp;
-                <button class="btn btn-outline-danger my-2 my-sm-0">Зупинити</button>
+                <button class="btn btn-outline-success my-2 my-sm-0" id="activate-program" value="{{ program.id }}">
+                    Активувати
+                </button> &nbsp;
+                <button class="btn btn-outline-danger my-2 my-sm-0" id="stop-program" value="{{ program.id }}">Зупинити</button>
             </div>
         </nav>
     </div>

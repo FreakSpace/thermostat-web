@@ -3,6 +3,10 @@ import re
 from ts.models import Thermostat
 
 pattern = r"([\d.]+)"
+SOCK_HOST = 'localhost'
+SOCK_PORT = 10001
+
+GET_DATA = "get_data"
 
 
 class ThermostatBox:
@@ -11,7 +15,7 @@ class ThermostatBox:
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
         # Connect the socket to the port where the server is listening
-        server_address = ('localhost', 10001)
+        server_address = (SOCK_HOST, SOCK_PORT)
 
         self.sock.connect(server_address)
 
@@ -26,7 +30,7 @@ class ThermostatBox:
         try:
 
             # Send data
-            message = "1".encode()
+            message = GET_DATA.encode()
 
             self.sock.sendall(message)
 
