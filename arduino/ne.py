@@ -56,9 +56,14 @@ class ThermostatBox:
                     light_R=int(res[7]),
                     light_G=int(res[8]),
                     light_B=int(res[9]),
-                 )
+                )
                 obj.save()
 
         finally:
 
             self.sock.close()
+
+def f():
+    o = ThermostatBox()
+    o.get_data_from_box()
+    del o
