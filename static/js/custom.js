@@ -32,9 +32,36 @@ $("#clean-data-button").on("click", function () {
 
 $(function () {
   $('[data-toggle="popover"]').popover()
-})
+});
 
+$('#program-modal').on('shown.bs.modal', function () {
+  $('#myInput').trigger('focus')
+});
 
+$('#activate-program').on('click', function () {
+    var _id = $(this)[0].value;
+    $.ajax({
+        url: "run/?run_id=" + _id,
+        dataType: 'json',
+        success: function (data) {
+            if (data["state"] === "success")
+                $("#success-alert").addClass("show");
+            else
+                $("#not-success-alert").addClass("show");
+        }
+    });
+});
+
+$('#stop-program').on('click', function () {
+    var _id = $(this)[0].value;
+    $.ajax({
+        url: "run/?run_id=" + _id + "&stop=true",
+        dataType: 'json',
+        success: function (data) {
+            $("#stop-program-alert").addClass("show");
+        }
+    });
+});
 
 $("tr").on("click", function () {
     /*

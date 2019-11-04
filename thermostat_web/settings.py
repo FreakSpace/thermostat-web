@@ -25,7 +25,7 @@ SECRET_KEY = 'ou)5i$95@2+q#gki41-wyk7n6@ncdk*xca&+9p!vfg^pxw%192'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -120,11 +120,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
-)
+STATIC_ROOT = '/home/pi/tsbox/ts-web/static'
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, "static"),
+#)
 
 CRONJOBS = [
-    ('*/1 * * * *', 'arduino.serial_read.get_data_from_box', '>> /tmp/schedule_job.log')
+    ('*/1 * * * *', 'arduino.ne.f', '>> /tmp/schedule_job.log')
 ]
