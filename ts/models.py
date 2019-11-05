@@ -14,18 +14,28 @@ class Thermostat(models.Model):
     co2 = models.FloatField("Рівень CO2", blank=True, null=True)
     set_co2 = models.FloatField("Встановлений рівень CO2", blank=True, null=True)
 
-    light = models.BooleanField("Стан освітлення", default=False)
-    light_mode = models.BooleanField("RGB: True, UV: False", default=False)
+    light = models.IntegerField("Стан освітлення", default=0)
 
+    light_UV = models.IntegerField("UV", default=0)
     light_R = models.IntegerField("R", default=0)
     light_G = models.IntegerField("G", default=0)
     light_B = models.IntegerField("B", default=0)
 
     time = models.DateTimeField(auto_now_add=True)
 
+    def get_light_mode(self):
+        if self.light == 1:
+            return "UV"
+        elif self.light == 2:
+            return "RGB"
+        elif self.light == 3:
+            return "RGB & UV"
+        return "Off"
+
     def __str__(self):
         return f"{self.time.strftime('%Y-%m-%d %H:%M:%S')} | State: {'On' if self.thermostat_state else 'Off'} | t: {self.temp}" \
-               f"{' | light:' + str(self.light) if self.light else ''}"
+               f" | light: {self.get_light_mode()}"
+
 
 
 class Program(models.Model):
@@ -48,9 +58,9 @@ class Phase(models.Model):
     co2_control = models.BooleanField("Увімкнути контроль СО2", default=False)
     set_co2 = models.IntegerField("Встановити рівень CO2", default=0)
 
-    light = models.BooleanField("Стан освітлення", default=False)
-    light_mode = models.BooleanField("RGB: True, UV: False", default=False)
+    light = models.IntegerField("Стан освітлення", default=0)
 
+    light_UV = models.IntegerField("UV", default=0)
     light_R = models.IntegerField("R", default=0)
     light_G = models.IntegerField("G", default=0)
     light_B = models.IntegerField("B", default=0)

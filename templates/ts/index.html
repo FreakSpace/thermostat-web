@@ -58,16 +58,9 @@
                         <span class="badge badge-info">{{ last_record.set_temp }}°C</span>
                     </li>
                     <hr>
-                    <li>CO2 зараз:
-                        <span class="badge badge-dark">{{ last_record.co2 }}</span>
-                    </li>
-                    <li>Встановлений рівень CO2:
-                        <span class="badge badge-dark">{{ last_record.set_co2 }}</span>
-                    </li>
-                    <hr>
                     <li>Освітленість:
                         {% if last_record.light %}
-                            <span class="badge badge-warning">Увімкнено</span>
+                            <span class="badge badge-warning">{{ last_record.get_light_mode }}</span>
                         {% else %}
                             <span class="badge badge-secondary">Вимкнено</span>
                         {% endif %}
