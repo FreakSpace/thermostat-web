@@ -30,3 +30,18 @@
     color: #fff;
     background-color: #661bde;
 }
+
+.badge-red {
+    color: #fff;
+    background-color: red;
+}
+
+.badge-green {
+    color: #fff;
+    background-color: green;
+}
+
+.badge-blue {
+    color: #fff;
+    background-color: blue;
+}

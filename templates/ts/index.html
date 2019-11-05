@@ -68,6 +68,15 @@
                     <li>
                         Інтенсивність UV [0-355]: <span class="badge badge-violet">{{ last_record.light_UV }}</span>
                     </li>
+                    <li>
+                        Інтенсивність R [0-355]: <span class="badge badge-red">{{ last_record.light_R }}</span>
+                    </li>
+                    <li>
+                        Інтенсивність G [0-355]: <span class="badge badge-green">{{ last_record.light_G }}</span>
+                    </li>
+                    <li>
+                        Інтенсивність B [0-355]: <span class="badge badge-blue">{{ last_record.light_B }}</span>
+                    </li>
                     <li>Колір встановленого RGB:
                         <span class="light-color"
                               style="background-color: rgb({{ last_record.light_R }}, {{ last_record.light_G }}, {{ last_record.light_B }})"
