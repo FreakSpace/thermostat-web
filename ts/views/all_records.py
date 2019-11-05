@@ -15,7 +15,8 @@ def get_single(request):
     data["set_temp"] = record.set_temp
     data["co2"] = record.co2
     data["set_co2"] = record.set_co2
-    data["light"] = record.light
+    data["light"] = record.get_light_mode()
+    data["light_UV"] = record.light_UV
     data["light_R"] = record.light_R
     data["light_G"] = record.light_G
     data["light_B"] = record.light_B

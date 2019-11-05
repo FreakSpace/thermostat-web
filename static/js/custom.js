@@ -91,21 +91,25 @@ $("tr").on("click", function () {
             });
             $("#th-temp").text(data['temp'] + "°C");
             $("#th-set-t").text(data['set_temp'] + "°C");
-            $("#th-co2").text(data['co2'] + "");
-            $("#th-set-co2").text(data['set_co2'] + "");
+
 
             $("#th-light").text(function () {
-                if (data['light']) {
-                    $(this).removeClass("badge-secondary");
-                    $(this).addClass("badge-warning");
-                    return "Увімкнено";
-                }
-                else {
+                if (data['light'] === "Off") {
                     $(this).removeClass("badge-warning");
                     $(this).addClass("badge-secondary");
                     return "Вимкнено"
                 }
+                else {
+                    $(this).removeClass("badge-secondary");
+                    $(this).addClass("badge-warning");
+                    return data['light'];
+                }
             });
+
+            $("#th-uv-intensity").text(data['light_UV']);
+            $("#th-r-intensity").text(data['light_R']);
+            $("#th-g-intensity").text(data['light_G']);
+            $("#th-b-intensity").text(data['light_B']);
 
             $("#th-color-light").text(function () {
                 $(this).css("background-color", 'rgb('+data['light_R']+','+data['light_G']+','+data['light_B']+')')
