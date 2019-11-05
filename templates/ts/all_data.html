@@ -12,7 +12,6 @@
                             <th scope="col">Час | дата</th>
                             <th scope="col">Стан</th>
                             <th scope="col">Темп.</th>
-                            <th scope="col">Рів. СО2</th>
                             <th scope="col">Освітлення</th>
                         </tr>
                         </thead>
@@ -30,13 +29,8 @@
                                     {% endif %}
                                 </td>
                                 <td>{{ record.temp }}</td>
-                                <td>{{ record.co2 }}</td>
                                 <td>
-                                    {% if record.light %}
-                                        On
-                                    {% else %}
-                                        Off
-                                    {% endif %}
+                                    {{ record.get_light_mode }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -69,15 +63,20 @@
                         <span class="badge badge-info" id="th-set-t"></span>
                     </li>
                     <hr>
-                    <li>CO2 зараз:
-                        <span class="badge badge-dark" id="th-co2"></span>
-                    </li>
-                    <li>Встановлений рівень CO2:
-                        <span class="badge badge-dark" id="th-set-co2"></span>
-                    </li>
-                    <hr>
                     <li>Освітленість:
                         <span class="badge" id="th-light"></span>
+                    </li>
+                    <li>
+                        Інтенсивність UV [0-355]: <span class="badge badge-violet" id="th-uv-intensity"></span>
+                    </li>
+                    <li>
+                        Інтенсивність R [0-355]: <span class="badge badge-red" id="th-r-intensity"></span>
+                    </li>
+                    <li>
+                        Інтенсивність G [0-355]: <span class="badge badge-green" id="th-g-intensity"></span>
+                    </li>
+                    <li>
+                        Інтенсивність B [0-355]: <span class="badge badge-blue" id="th-b-intensity"></span>
                     </li>
                     <li>Колір встановленого освітлення:
                         <span class="light-color" id="th-color-light">&nbsp</span>
