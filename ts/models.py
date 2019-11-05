@@ -37,13 +37,13 @@ class Thermostat(models.Model):
                f" | light: {self.get_light_mode()}"
 
 
-
 class Program(models.Model):
     name = models.CharField(max_length=100)
     desc = models.TextField(max_length=1000, blank=True, null=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
     last_use = models.DateTimeField(blank=True, null=True)
+    looping = models.IntegerField("Кількість зациклень", default=1)
 
     def __str__(self):
         return f"Program: {self.name}"
