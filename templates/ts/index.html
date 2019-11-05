@@ -65,7 +65,10 @@
                             <span class="badge badge-secondary">Вимкнено</span>
                         {% endif %}
                     </li>
-                    <li>Колір встановленого освітлення:
+                    <li>
+                        Інтенсивність UV [0-355]: <span class="badge badge-violet">{{ last_record.light_UV }}</span>
+                    </li>
+                    <li>Колір встановленого RGB:
                         <span class="light-color"
                               style="background-color: rgb({{ last_record.light_R }}, {{ last_record.light_G }}, {{ last_record.light_B }})"
                         >&nbsp;</span>
@@ -133,15 +136,9 @@
             <div><h3>Загальний графік</h3></div>
             <canvas id="temperatureChart"></canvas>
         </div>
-        <div class="row">
-            <div class="col-md-6">
-                <div><h3>Рівень СО2</h3></div>
-                <canvas id="co2Chart"></canvas>
-            </div>
-            <div class="col-md-6">
+        <div class="col-md-12">
                 <div><h3>Освітленість</h3></div>
                 <canvas id="lightChart"></canvas>
-            </div>
         </div>
     </div>
 {% endblock %}
@@ -183,8 +180,7 @@
                         {% for item in qset %}
                             {{ item.temp }},
                         {% endfor %}
-                    ],
-                    {#yAxisID: 'left-y-axis'#}
+                    ]
                 }, {
                     label: 'Встановлена температура',
                     {#backgroundColor: 'rgb(255, 99, 132)',#}
@@ -193,26 +189,7 @@
                         {% for item in qset %}
                             {{ item.set_temp }},
                         {% endfor %}
-                    ],
-                    {#yAxisID: 'right-y-axis'#}
-                }, {
-                    label: 'Стан освітленості',
-                    {#backgroundColor: 'rgb(255, 99, 132)',#}
-                    borderColor: 'rgb(234, 230, 29)',
-                    data: [
-                        {% for item in qset %}
-                            {% if item.light == 1 %}
-                                1,
-                            {% elif item.light == 2 %}
-                                2,
-                            {% elif item.light == 3 %}
-                                3,
-                            {% else %}
-                                0,
-                            {% endif %}
-                        {% endfor %}
-                    ],
-                    yAxisID: 'right-y-axis'
+                    ]
                 }],
                 labels: [
                     {% for item in qset %}
@@ -240,79 +217,122 @@
     </script>
     <script>
 
-        var co2Element = document.getElementById('co2Chart').getContext('2d');
-        var co2_chart = new Chart(co2Element, {
-            // The type of chart we want to create
-            type: 'line',
-
-            // The data for our dataset
-            data: {
-                datasets: [{
-                    label: 'Рівень СО2 зараз',
-                    {#backgroundColor: 'rgb(255, 99, 132)',#}
-                    borderColor: 'rgb(20, 20, 20)',
-                    data: [
-                        {% for item in qset %}
-                            {{ item.co2 }},
-                        {% endfor %}
-                    ],
-                }, {
-                    label: 'Встановлений рівень СО2',
-                    {#backgroundColor: 'rgb(255, 99, 132)',#}
-                    borderColor: 'rgb(10, 110, 240)',
-                    data: [
-                        {% for item in qset %}
-                            {{ item.set_co2 }},
-                        {% endfor %}
-                    ],
-                }],
-                labels: [
+        var lightElement = document.getElementById('lightChart').getContext('2d');
+        var light_chart = new Chart(lightElement, {
+			type: 'line',
+			data: {
+				xLabels: [
                     {% for item in qset %}
                         "{{ item.time }}",
                     {% endfor %}
-                ]
-            },
-
-            // Configuration options go here
-            options: {}
-        });
-    </script>
-    <script>
-
-        var lightElement = document.getElementById('lightChart').getContext('2d');
-        var light_chart = new Chart(lightElement, {
-            // The type of chart we want to create
-            type: 'line',
-
-            // The data for our dataset
-            data: {
-                datasets: [{
-                    label: 'Стан освітленості',
-                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                ],
+				yLabels: ["RGB & UV", "RGB", "UV",  "Off"],
+				datasets: [{
+					label: 'Стан освітлення',
                     borderColor: 'rgb(234, 230, 29)',
-                    data: [
-                        {% for item in qset %}
+					data: [
+					    {% for item in qset %}
                             {% if item.light == 1 %}
-                                1,
+                                "UV",
                             {% elif item.light == 2 %}
-                                2,
+                                "RGB",
                             {% elif item.light == 3 %}
-                                3,
+                                "RGB & UV",
                             {% else %}
-                                0,
+                                "Off",
                             {% endif %}
                         {% endfor %}
                     ],
-                }],
-                labels: [
-                    {% for item in qset %}
-                        "{{ item.time }}",
-                    {% endfor %}
-                ]
-            },
+					fill: false
+				}, {
+                    label: 'Інтенсивність UV',
+                    {#backgroundColor: 'rgb(255, 99, 132)',#}
+                    borderColor: 'rgb(111, 34, 132)',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.light_UV }},
+                        {% endfor %}
+                    ],
+                    yAxisID: 'right-y-axis',
+                    fill: false
+                }, {
+                    label: 'Інтенсивність R',
+                    borderColor: 'red',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.light_R }},
+                        {% endfor %}
+                    ],
+                    yAxisID: 'right-y-axis',
+                    fill: false
+                }, {
+                    label: 'Інтенсивність G',
+                    borderColor: 'green',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.light_G }},
+                        {% endfor %}
+                    ],
+                    yAxisID: 'right-y-axis',
+                    fill: false
+                }, {
+                    label: 'Інтенсивність B',
+                    borderColor: 'blue',
+                    data: [
+                        {% for item in qset %}
+                            {{ item.light_B }},
+                        {% endfor %}
+                    ],
+                    yAxisID: 'right-y-axis',
+                    fill: false
+                }]
+			},
+			options: {
+				responsive: true,
+				title: {
+					display: true,
+					text: 'Chart with Non Numeric Y Axis'
+				},
+				scales: {
+					xAxes: [{
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Дата та час'
+						}
+					}],
+					yAxes: [{
+					    id: 'left-y-axis',
+						type: 'category',
+						position: 'left',
+						display: true,
+						scaleLabel: {
+							display: true,
+							labelString: 'Стан освітлення'
+						},
+						ticks: {
+							reverse: true
+						}
+					}, {
+                        id: 'right-y-axis',
+                        type: 'linear',
+                        position: 'right',
+                        scaleLabel: {
+							display: true,
+							labelString: 'Інтенсивність освітленості [0-255]'
+						},
+                        ticks: {
+                            suggestedMin: 0,
+							suggestedMax: 255
+						}
+                    }]
+				}
+			}
+		}
+	);
+    </script>
+    <script>
 
-            // Configuration options go here
-            options: {}
-        });
+
     </script>
 {% endblock %}
