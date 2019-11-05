@@ -66,16 +66,16 @@
                         {% endif %}
                     </li>
                     <li>
-                        Інтенсивність UV [0-355]: <span class="badge badge-violet">{{ last_record.light_UV }}</span>
+                        Інтенсивність UV [0-255]: <span class="badge badge-violet">{{ last_record.light_UV }}</span>
                     </li>
                     <li>
-                        Інтенсивність R [0-355]: <span class="badge badge-red">{{ last_record.light_R }}</span>
+                        Інтенсивність R [0-255]: <span class="badge badge-red">{{ last_record.light_R }}</span>
                     </li>
                     <li>
-                        Інтенсивність G [0-355]: <span class="badge badge-green">{{ last_record.light_G }}</span>
+                        Інтенсивність G [0-255]: <span class="badge badge-green">{{ last_record.light_G }}</span>
                     </li>
                     <li>
-                        Інтенсивність B [0-355]: <span class="badge badge-blue">{{ last_record.light_B }}</span>
+                        Інтенсивність B [0-255]: <span class="badge badge-blue">{{ last_record.light_B }}</span>
                     </li>
                     <li>Колір встановленого RGB:
                         <span class="light-color"
@@ -143,13 +143,13 @@
     <hr>
     <div class="container">
         <div class="col-md-12">
-            <div><h3>Загальний графік</h3></div>
+            <div><h3>Температурний графік</h3></div>
             <canvas id="temperatureChart"></canvas>
         </div>
         <hr>
         <div class="col-md-12">
-                <div><h3>Освітленість</h3></div>
-                <canvas id="lightChart"></canvas>
+            <div><h3>Освітленість</h3></div>
+            <canvas id="lightChart"></canvas>
         </div>
     </div>
 {% endblock %}
