@@ -28,6 +28,10 @@ def add_phase(request):
 
 
 def run_program(request):
+    """
+    Відправляє до ящика код:
+        Order; Days; Hours; Min; TS_STATE; SET_T; STATE_CO2; SET_CO2; LIGHT_STATE; UV; R; G; B;
+    """
     id_elem = request.GET.get('run_id')
     stop_program = request.GET.get('stop')
     if not stop_program and id_elem:
@@ -43,8 +47,8 @@ def run_program(request):
             program_text += str(phase.set_temp) + ";"
             program_text += str(int(phase.co2_control)) + ";"
             program_text += str(phase.set_co2) + ";"
-            program_text += str(int(phase.light)) + ";"
-            program_text += str(int(phase.light_mode)) + ";"
+            program_text += str(phase.light) + ";"
+            program_text += str(phase.light_UV) + ";"
             program_text += str(phase.light_R) + ";"
             program_text += str(phase.light_G) + ";"
             program_text += str(phase.light_B) + ";\n"

@@ -1,6 +1,7 @@
 import socket
 import re
 from ts.models import Thermostat
+from .settings import *
 
 pattern = r"([\d.]+)"
 SOCK_HOST = 'localhost'
@@ -46,16 +47,17 @@ class ThermostatBox:
                 print(res[2])
 
                 obj = Thermostat(
-                    thermostat_state=bool(int(res[0])),
-                    current_state=res[1],
-                    temp=float(res[2]),
-                    set_temp=float(res[3]),
-                    co2=float(res[4]),
-                    set_co2=float(res[5]),
-                    light=bool(int(res[6])),
-                    light_R=int(res[7]),
-                    light_G=int(res[8]),
-                    light_B=int(res[9]),
+                    thermostat_state=bool(int(res[TS_STATE])),
+                    current_state=res[CURRENT_STATE],
+                    temp=float(res[CURRENT_TEMP]),
+                    set_temp=float(res[SET_TEMP]),
+                    co2=float(res[CO2_STATE]),
+                    set_co2=float(res[CO2_SETTED]),
+                    light=int(res[LIGHT_STATE]),
+                    light_UV=int(res[UV]),
+                    light_R=int(res[R]),
+                    light_G=int(res[G]),
+                    light_B=int(res[B]),
                 )
                 obj.save()
 
