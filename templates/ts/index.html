@@ -210,24 +210,20 @@
             // Configuration options go here
             options: {
                 scales: {
+                    yAxes: [{
+                        id: 'left-y-axis',
+                        type: 'linear',
+                        position: 'left',
+                        scaleLabel: {
+							display: true,
+							labelString: 'Температура, °C'
+						}
+                    }],
                     xAxes: [{
 						display: true,
 						scaleLabel: {
 							display: true,
 							labelString: 'Дата та час'
-						}
-					}],
-					yAxes: [{
-					    id: 'left-y-axis',
-						type: 'category',
-						position: 'left',
-						display: true,
-						scaleLabel: {
-							display: true,
-							labelString: 'Температура, °C'
-						},
-						ticks: {
-							reverse: true
 						}
 					}]
                 }
