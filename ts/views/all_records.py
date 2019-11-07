@@ -60,6 +60,7 @@ class AllDataView(ListView):
         start_date_text = self.request.GET.get("start_date")
         end_date_text = self.request.GET.get("end_date")
         ts_state = self.request.GET.get("ts_state")
+        current_state = self.request.GET.get("current_state")
         light_state = self.request.GET.get("light_state")
 
         qset = self.queryset
@@ -73,11 +74,14 @@ class AllDataView(ListView):
         else:
             data = qset.filter(time__range=(start_date, end_date))
 
-        if ts_state and ts_state != "3":  # 0 - вимк, 1 - тепло, 2 - охолодження, 3 - всі зразу
-            data = data.filter(current_state=ts_state)
+        if ts_state and ts_state != "2":
+            data = data.filter(thermostat_state=int(ts_state))
+
+        if current_state and current_state != "3":  # 0 - вимк, 1 - тепло, 2 - охолодження, 3 - всі зразу
+            data = data.filter(current_state=current_state)
 
         if light_state and light_state != "4":
-            data = data.filter(light=light_state)
+            data = data.filter(light=int(light_state))
 
         self.all_records_number = len(data)
 
@@ -86,28 +90,34 @@ class AllDataView(ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         data = super().get_context_data(**kwargs)
 
+        filter_by_date = self.request.GET.get("filter_by_date")
         start_date_text = self.request.GET.get("start_date")
         end_date_text = self.request.GET.get("end_date")
+        ts_state = self.request.GET.get("ts_state")
+        current_state = self.request.GET.get("current_state")
+        light_state = self.request.GET.get("light_state")
 
         qset = self.queryset
         first_record_date = qset.reverse().first().time
         last_record_date = qset.reverse().last().time
         start_date, end_date = self._range_date(start_date_text, end_date_text, first_record_date, last_record_date)
 
+        data['filter_by_date'] = filter_by_date
         data['start_date'] = start_date
         data['end_date'] = end_date
-
-        data['last_record'] = qset.last()
+        data['ts_state'] = ts_state
+        data['current_state'] = current_state
+        data['light_state'] = light_state
 
         data['all_records_number'] = self.all_records_number
 
+
         if start_date >= end_date:
             data['alert_code'] = 0
-            data['alerts'] = "Початкова дата та час не можуть бути більшими за кінцеві. <strong>Вибрано дані за " \
-                             "останню годину</strong>"
+            data['alerts'] = "Початкова дата та час не можуть бути більшими за кінцеві!"
 
         elif not self.all_records_number:
             data['alert_code'] = 1
-            data['alerts'] = "В даний період часу немає записів"
+            data['alerts'] = "З такими параметрами записів не знайдено"
 
         return data

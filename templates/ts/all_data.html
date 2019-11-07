@@ -1,11 +1,29 @@
 {% extends "base.html" %}
 
+{% block alert %}
+    {% if alerts %}
+        <br>
+        <div class="alert alert-position alert-dismissible fade show
+                                        {% if alert_code == 1 %}
+                                            alert-warning
+                                        {% elif alert_code == 0 %}
+                                            alert-danger
+                                        {% endif %}
+                                   " role="alert">
+            {{ alerts|safe }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="jumbotron mt-3">
             <div class="row">
 
-                <div class="col-md-6">
+                <div class="col-md-5">
                     Фільтрувати по даті від:
                     <div class="form-group">
                         <div class="input-group date" id="datetimepicker_from" data-target-input="nearest">
@@ -18,7 +36,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-5">
                     До:
                     <div class="form-group">
                         <div class="input-group date" id="datetimepicker_to" data-target-input="nearest">
@@ -31,22 +49,47 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-offset-6"></div>
+                <div class="col-md-2">
+                    <br>
+                  <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="filter_by_date_checkbox" checked>
+                    <label class="custom-control-label" for="filter_by_date_checkbox">Вибірка по даті</label>
+                  </div>
+                </div>
+
                 <div class="col-md-4">
                     <form>
-                        Темп. режим: <span id="ts_state_text"><b>Всі</b></span>
+                        Стан термостату: <span id="ts_state_text"><b>Всі</b></span> <br>
                         <div class="btn-group btn-group-toggle" id="ts_state_group" data-toggle="buttons">
                           <label class="btn btn-secondary active">
-                            <input type="radio" name="ts_group" value="3" id="all_ts_state" autocomplete="off" checked>Всі
+                            <input type="radio" name="ts_group" value="2" id="all_ts_state" autocomplete="off" checked>Всі
                           </label>
                           <label class="btn btn-dark">
                             <input type="radio" name="ts_group" value="0" id="off_ts_state" autocomplete="off" >Вимк.
                           </label>
+                          <label class="btn btn-success">
+                            <input type="radio" name="ts_group" value="1" id="on_ts_state" autocomplete="off">Увімк.
+                          </label>
+
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <form>
+                        Темп. режим: <span id="current_state_text"><b>Всі</b></span>
+                        <div class="btn-group btn-group-toggle" id="current_state_group" data-toggle="buttons">
+                          <label class="btn btn-secondary active">
+                            <input type="radio" name="current_ts_group" value="3" id="all_current_state" autocomplete="off" checked>Всі
+                          </label>
+                          <label class="btn btn-dark">
+                            <input type="radio" name="current_ts_group" value="0" id="off_current_state" autocomplete="off" >Вимк.
+                          </label>
                           <label class="btn btn-danger">
-                            <input type="radio" name="ts_group" value="1" id="heat_ts_state" autocomplete="off"> Нагрів
+                            <input type="radio" name="current_ts_group" value="1" id="heat_current_state" autocomplete="off"> Нагрів
                           </label>
                           <label class="btn btn-primary">
-                            <input type="radio" name="ts_group" value="2" id="cooling_ts_state" autocomplete="off"> Охол.
+                            <input type="radio" name="current_ts_group" value="2" id="cooling_current_state" autocomplete="off"> Охол.
                           </label>
                         </div>
                     </form>
@@ -60,7 +103,7 @@
                             <input type="radio" name="light_group" value="4" id="all_light_state" autocomplete="off" checked>Всі
                           </label>
                           <label class="btn btn-dark">
-                            <input type="radio" name="light_group" value="0" id="off_light_state" autocomplete="off" checked>Вимк.
+                            <input type="radio" name="light_group" value="0" id="off_light_state" autocomplete="off" >Вимк.
                           </label>
                           <label class="btn btn-violet">
                             <input type="radio" name="light_group" value="1" id="uv_light_state" autocomplete="off"> UV
@@ -74,13 +117,14 @@
                         </div>
                     </form>
                 </div>
-
-                <div class="col-md-4">
-                    <br>
-                    <button id="get-all-data-button" class="btn  btn-success">Вибрати в даному діапазоні</button>
-                </div>
                 <div class="col-md-12">
                     <hr>
+                </div>
+                <div class="col-md-8">
+{#                    <br>#}
+                    <button id="get-all-data-button" class="btn btn-sm btn-success">Вибрати в даному діапазоні</button>
+
+                    <button id="clean-all-data-button" class="btn btn-sm btn-warning">Очистити вибране</button>
                 </div>
 
                 <div class="col-md-4">
@@ -129,10 +173,11 @@
             </div>
 
             <div class="col-md-5 fix-block">
-                <div id="detail-data" class="jumbotron mt-3 not-visible">
+                <div id="detail-data" class="jumbotron mt-3 not-visible detail-data-block">
                     <li>id:
                         <span class="badge badge-light" id="th-id"></span>  /  datetime:
                         <span class="badge badge-light" id="th-date"></span>
+                        <button type="button" id="close-data-block-button" style="float: right;" class="btn btn-sm btn-outline-dark">x</button>
                     </li>
                     <hr>
                     <li>Стан термостату:
@@ -168,6 +213,9 @@
                     <li>Колір встановленого освітлення:
                         <span class="light-color" id="th-color-light">&nbsp</span>
                     </li>
+
+
+
                 </div>
             </div>
         </div>
@@ -228,25 +276,34 @@
 {% endblock %}
 
 {% block script %}
-    <script type="text/javascript">
-        $(function () {
-            set_ts_name_state();
-        });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker_from').datetimepicker({
-                locale: 'ru',
-                defaultDate: '{{ start_date|date:"Y-m-d H:i" }}',
-                format: "DD / MM / YYYY  |  HH:mm",
-            });
-        });
+    <script>
+        set_filter_by_date({{ filter_by_date }})
+
+        set_ts_name_state("{{ ts_state }}");
+        set_ts_checked("{{ ts_state }}");
+
+        set_current_state_name("{{ current_state }}");
+        set_current_checked("{{ current_state }}");
+
+        set_light_name_state("{{ light_state }}");
+        set_light_checked("{{ light_state }}");
+
     </script>
     <script type="text/javascript">
         $(function () {
             $('#datetimepicker_to').datetimepicker({
                 locale: 'ru',
                 defaultDate: '{{ end_date|date:"Y-m-d H:i" }}',
+                format: "DD / MM / YYYY  |  HH:mm",
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker_from').datetimepicker({
+                locale: 'ru',
+                defaultDate: '{{ start_date|date:"Y-m-d H:i" }}',
                 format: "DD / MM / YYYY  |  HH:mm",
             });
         });

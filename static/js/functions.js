@@ -17,18 +17,46 @@ function formatDate(date) {
     return [year, month, day, hours, minutes].join('-');
 }
 
+function set_filter_by_date(filter) {
+    $("#filter_by_date_checkbox").attr("checked", filter)
+}
+
 function get_ts_state() {
     var ts_group = document.getElementsByName('ts_group');
 
     for(i = 0; i < ts_group.length; i++) {
         if(ts_group[i].checked)
             return ts_group[i].value
-        // document.getElementById("ts_state_text").innerHTML = ts_group[i].value;
     }
 }
 
-function set_ts_name_state() {
-    var state = get_ts_state();
+function set_ts_name_state(state="3") {
+    if (state === "3")
+        state = get_ts_state();
+
+    var state_name = "Всі";
+
+    if (state === "0")
+        state_name = "Вимкнуто";
+    else if (state === "1")
+        state_name = "Увімкнуто";
+
+
+    document.getElementById("ts_state_text").innerHTML = "<b>"+state_name+"</b>";
+}
+
+function get_current_state() {
+    var ts_group = document.getElementsByName('current_ts_group');
+
+    for(i = 0; i < ts_group.length; i++) {
+        if(ts_group[i].checked)
+            return ts_group[i].value
+    }
+}
+
+function set_current_state_name(state="4") {
+    if (state === "4")
+        state = get_current_state();
     var state_name = "Всі";
 
     if (state === "0")
@@ -38,7 +66,7 @@ function set_ts_name_state() {
     else if (state === "2")
         state_name = "Охолодження";
 
-    document.getElementById("ts_state_text").innerHTML = "<b>"+state_name+"</b>";
+    document.getElementById("current_state_text").innerHTML = "<b>"+state_name+"</b>";
 }
 
 function get_light_state() {
@@ -50,8 +78,9 @@ function get_light_state() {
     }
 }
 
-function set_light_name_state() {
-    var state = get_light_state();
+function set_light_name_state(state="5") {
+    if (state === "5")
+        state = get_light_state();
     var state_name = "Всі";
 
     if (state === "0")
@@ -65,4 +94,49 @@ function set_light_name_state() {
 
 
     document.getElementById("light_state_text").innerHTML = "<b>"+state_name+"</b>";
+}
+
+function set_ts_checked(state="3") {
+    if (state === "0") {
+        $("#off_ts_state").attr("checked", true);
+    }
+    else if (state === "1") {
+        $("#on_ts_state").attr("checked", true);
+    }
+    else if (state === "2") {
+        $("#all_ts_state").attr("checked", true);
+    }
+}
+
+function set_current_checked(state="4") {
+    if (state === "0") {
+        $("#off_current_state").attr("checked", true);
+    }
+    else if (state === "1") {
+        $("#heat_current_state").attr("checked", true);
+    }
+    else if (state === "2") {
+        $("#cooling_current_state").attr("checked", true);
+    }
+    else if (state === "3") {
+        $("#all_current_state").attr("checked", true);
+    }
+}
+
+function set_light_checked(state="5") {
+    if (state === "0") {
+        $("#off_light_state").attr("checked", true);
+    }
+    else if (state === "1") {
+        $("#uv_light_state").attr("checked", true);
+    }
+    else if (state === "2") {
+        $("#rgb_light_state").attr("checked", true);
+    }
+    else if (state === "3") {
+        $("#rgbuv_light_state").attr("checked", true);
+    }
+    else if (state === "4") {
+        $("#all_light_state").attr("checked", true);
+    }
 }

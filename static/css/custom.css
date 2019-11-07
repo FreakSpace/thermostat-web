@@ -55,3 +55,8 @@
 .btn-violet:hover {
     color: #fff;
 }
+
+.detail-data-block {
+    border: 1px solid #ccc;
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
