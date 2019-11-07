@@ -106,6 +106,7 @@ $("tr").on("click", function () {
         data: _id,
         dataType: 'json',
         success: function (data) {
+            $("#detail-data").hide("fast");
             $("#detail-data").show("fast");
 
             $("#th-id").text(data['id']);
