@@ -2,6 +2,93 @@
 
 {% block body %}
     <div class="container">
+        <div class="jumbotron mt-3">
+            <div class="row">
+
+                <div class="col-md-6">
+                    Фільтрувати по даті від:
+                    <div class="form-group">
+                        <div class="input-group date" id="datetimepicker_from" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input"
+                                   data-target="#datetimepicker_from"/>
+                            <div class="input-group-append" data-target="#datetimepicker_from"
+                                 data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    До:
+                    <div class="form-group">
+                        <div class="input-group date" id="datetimepicker_to" data-target-input="nearest">
+                            <input type="text" class="form-control datetimepicker-input"
+                                   data-target="#datetimepicker_to"/>
+                            <div class="input-group-append" data-target="#datetimepicker_to"
+                                 data-toggle="datetimepicker">
+                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-offset-6"></div>
+                <div class="col-md-4">
+                    <form>
+                        Темп. режим: <span id="ts_state_text"><b>Всі</b></span>
+                        <div class="btn-group btn-group-toggle" id="ts_state_group" data-toggle="buttons">
+                          <label class="btn btn-secondary active">
+                            <input type="radio" name="ts_group" value="3" id="all_ts_state" autocomplete="off" checked>Всі
+                          </label>
+                          <label class="btn btn-dark">
+                            <input type="radio" name="ts_group" value="0" id="off_ts_state" autocomplete="off" >Вимк.
+                          </label>
+                          <label class="btn btn-danger">
+                            <input type="radio" name="ts_group" value="1" id="heat_ts_state" autocomplete="off"> Нагрів
+                          </label>
+                          <label class="btn btn-primary">
+                            <input type="radio" name="ts_group" value="2" id="cooling_ts_state" autocomplete="off"> Охол.
+                          </label>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <form>
+                         Світловий режим: <span id="light_state_text"><b>Всі</b></span>
+                        <div class="btn-group btn-group-toggle" id="light_state_group" data-toggle="buttons">
+                          <label class="btn btn-secondary active">
+                            <input type="radio" name="light_group" value="4" id="all_light_state" autocomplete="off" checked>Всі
+                          </label>
+                          <label class="btn btn-dark">
+                            <input type="radio" name="light_group" value="0" id="off_light_state" autocomplete="off" checked>Вимк.
+                          </label>
+                          <label class="btn btn-violet">
+                            <input type="radio" name="light_group" value="1" id="uv_light_state" autocomplete="off"> UV
+                          </label>
+                          <label class="btn btn-light">
+                            <input type="radio" name="light_group" value="2" id="rgb_light_state" autocomplete="off"> RGB
+                          </label>
+                          <label class="btn btn-warning">
+                            <input type="radio" name="light_group" value="3" id="rgbuv_light_state" autocomplete="off"> RGB&UV
+                          </label>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-4">
+                    <br>
+                    <button id="get-all-data-button" class="btn  btn-success">Вибрати в даному діапазоні</button>
+                </div>
+                <div class="col-md-12">
+                    <hr>
+                </div>
+
+                <div class="col-md-4">
+                    Кількість отриманих записів: <span class="badge badge-dark ">{{ all_records_number }}</span>
+                </div>
+
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-7">
                 <div class="table-responsive">
@@ -138,4 +225,30 @@
             </ul>
         </div>
     {% endif %}
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+        $(function () {
+            set_ts_name_state();
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker_from').datetimepicker({
+                locale: 'ru',
+                defaultDate: '{{ start_date|date:"Y-m-d H:i" }}',
+                format: "DD / MM / YYYY  |  HH:mm",
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker_to').datetimepicker({
+                locale: 'ru',
+                defaultDate: '{{ end_date|date:"Y-m-d H:i" }}',
+                format: "DD / MM / YYYY  |  HH:mm",
+            });
+        });
+    </script>
 {% endblock %}

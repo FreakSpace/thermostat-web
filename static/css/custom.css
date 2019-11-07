@@ -45,3 +45,13 @@
     color: #fff;
     background-color: blue;
 }
+
+.btn-violet {
+    color: #fff;
+    background-color: #661bde;
+    border-color: #661bde;
+}
+
+.btn-violet:hover {
+    color: #fff;
+}
