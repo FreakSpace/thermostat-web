@@ -12,7 +12,7 @@ urlpatterns = [
     path('all_data/', AllDataView.as_view(), name='all-data'),
 
     path('programs/id<int:pk>', SingleProgramView.as_view(), name='single-program'),
-    path('programs/add_phase', ProgramsView.as_view(), name='programs'),
+    # path('programs/create_phase', CreatePhase.as_view(), name='create-phase'),
     path('programs/run/', run_program, name='run-program'),
     path('programs/', ProgramsView.as_view(), name='programs'),
 
