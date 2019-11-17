@@ -43,7 +43,7 @@ class Program(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     is_private = models.BooleanField(default=False)
     last_use = models.DateTimeField(blank=True, null=True)
-    looping = models.IntegerField("Кількість зациклень", default=1)
+    repeating = models.IntegerField("Кількість зациклень", default=1)
 
     def __str__(self):
         return f"Program: {self.name}"
