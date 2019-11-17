@@ -20,15 +20,16 @@ class SingleProgramView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SingleProgramView, self).get_context_data(**kwargs)
 
-        context['active_phases'] = Phase.objects \
-            .filter(program=context["program"]) \
+        context['active_phases'] = Phase.objects\
+            .filter(program=context["program"])\
             .filter(is_active=True) \
             .order_by("order_execution")
 
-        context['not_active_phases'] = Phase.objects \
-            .filter(program=context["program"]) \
-            .filter(is_active=False) \
+        context['not_active_phases'] = Phase.objects\
+            .filter(program=context["program"])\
+            .filter(is_active=False)\
             .order_by("order_execution")
+
         return context
 
 
@@ -39,7 +40,6 @@ def create_phase(request):
         set_t = request.POST.get("thermostat_state")
 
 
-
 def run_program(request):
     """
     Відправляє до ящика код:
@@ -48,7 +48,11 @@ def run_program(request):
     id_elem = request.GET.get('run_id')
     stop_program = request.GET.get('stop')
     if not stop_program and id_elem:
+        program = Program.objects.get(id=id_elem)
+
         program_text = "set_program\n"
+        program_text += f"program_id: {id_elem};\n"
+        program_text += f"repeating: {program.repeating};\n"
         phases = Phase.objects.filter(program_id=id_elem).order_by("order_execution")
 
         for phase in phases:
@@ -73,7 +77,6 @@ def run_program(request):
         except:
             return JsonResponse({"state": "error"})
         finally:
-            program = Program.objects.get(id=id_elem)
             program.last_use = timezone.now()
             program.save(update_fields=["last_use"])
             return JsonResponse({"state": "success"})
