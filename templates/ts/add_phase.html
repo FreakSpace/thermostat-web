@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block jumbotron %}
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <div class="row">
+            <div class="modal-body">
+                    <form action="">
+
+                        <div class="form-group">
+                            <label for="phase-name">Назва фази</label>
+                            <input type="text" class="form-control" name="phase_name" id="phase-name"
+                                   placeholder="введіть назву..">
+                        </div>
+                        <hr>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" name="ts_state" id="ts-state" checked>
+                            <label class="form-check-label" for="ts-state">Увімкнути термостат</label>
+                        </div>
+                        <div class="form-group">
+                            <label for="ts-temp">Температура (8-60)</label>
+                            <input type="number" max="60" min="8" class="form-control" name="ts_temp" id="ts-temp"
+                                   placeholder="встановити температуру..">
+                        </div>
+                        <hr>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" name="light" id="light" checked>
+                            <label class="form-check-label" for="light">Освітленість</label>
+                        </div>
+                        <fieldset class="form-group">
+                            <legend class="col-form-label pt-0">Тип освітлення</legend>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="rgb" id="rgb"
+                                       value="rgb" checked>
+                                <label class="form-check-label" for="rgb">
+                                    UV
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="uv" id="uv"
+                                       value="uv">
+                                <label class="form-check-label" for="uv">
+                                    RGB
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="rgb_uv" id="rgb_uv"
+                                       value="option2">
+                                <label class="form-check-label" for="rgb_uv">
+                                    RGB & UV
+                                </label>
+                            </div>
+                         </fieldset>
+                        <div class="form-group">
+                            <label for="intensity_uv">Інтенсивність UV</label>
+                            <input type="number" max="255" min="0" class="form-control" name="intensity_uv" id="intensity_uv"
+                                   placeholder="0-255">
+                        </div>
+                        <div class="form-group">
+                            <label for="intensity_r">Інтенсивність R</label>
+                            <input type="number" max="255" min="0" class="form-control" name="intensity_r" id="intensity_r"
+                                   placeholder="0-255">
+                        </div>
+                        <div class="form-group">
+                            <label for="intensity_g">Інтенсивність G</label>
+                            <input type="number" max="255" min="0" class="form-control" name="intensity_g" id="intensity_g"
+                                   placeholder="0-255">
+                        </div>
+                        <div class="form-group">
+                            <label for="intensity_b">Інтенсивність B</label>
+                            <input type="number" max="255" min="0" class="form-control" name="intensity_b" id="intensity_b"
+                                   placeholder="0-255">
+                        </div>
+                         <hr>
+                        <div class="form-group form-check">
+                            <input type="checkbox" class="form-check-input" name="is_active" id="is_active" checked>
+                            <label class="form-check-label" for="is_active">Зробити фазу активною</label>
+                        </div>
+                    </form>
+                </div>
+        </div>
+    </div>
+
+{% endblock %}
+

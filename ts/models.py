@@ -70,6 +70,16 @@ class Phase(models.Model):
     duration_m = models.IntegerField("Тривалість, хвилини", default=0)
 
     order_execution = models.IntegerField("Порядок виконання", blank=True, null=True)
+    is_active = models.BooleanField("Активувати", default=True)
+
+    def get_light_mode(self):
+        if self.light == 1:
+            return "UV"
+        elif self.light == 2:
+            return "RGB"
+        elif self.light == 3:
+            return "RGB & UV"
+        return "Off"
 
     def __str__(self):
         return f"Program: {self.program} | Phase: {self.phase_name}"

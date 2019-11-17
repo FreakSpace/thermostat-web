@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from ts.models import User, Program, Phase, LogUseProgram
 from arduino.tsbox import ThermostatBox
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 
 class ProgramsView(ListView):
@@ -19,12 +20,24 @@ class SingleProgramView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(SingleProgramView, self).get_context_data(**kwargs)
 
-        context['phases'] = Phase.objects.filter(program=context["program"])
+        context['active_phases'] = Phase.objects \
+            .filter(program=context["program"]) \
+            .filter(is_active=True) \
+            .order_by("order_execution")
+
+        context['not_active_phases'] = Phase.objects \
+            .filter(program=context["program"]) \
+            .filter(is_active=False) \
+            .order_by("order_execution")
         return context
 
 
-def add_phase(request):
-    return 0
+def create_phase(request):
+    if request.method == "POST":
+        phase_name = request.POST.get("phase_name")
+        thermostat_state = request.POST.get("thermostat_state")
+        set_t = request.POST.get("thermostat_state")
+
 
 
 def run_program(request):
@@ -36,7 +49,7 @@ def run_program(request):
     stop_program = request.GET.get('stop')
     if not stop_program and id_elem:
         program_text = "set_program\n"
-        phases = Phase.objects.filter(program_id=id_elem)
+        phases = Phase.objects.filter(program_id=id_elem).order_by("order_execution")
 
         for phase in phases:
             program_text += str(phase.order_execution) + ";"

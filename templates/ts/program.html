@@ -46,7 +46,7 @@
     <div class="container">
 
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <button class="navbar-brand btn disabled">Фази:</button>
+            <button class="navbar-brand btn disabled">Активні фази:</button>
 
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -69,7 +69,7 @@
     <div class="container">
         <div class="row">
 
-            {% for mod in phases %}
+            {% for mod in active_phases %}
                 <div class="col-md-4">
                     <div class="card mt-3">
                         <div class="card-header">
@@ -84,40 +84,170 @@
                                 {% if mod.thermostat_state %}
                                     <span class="badge badge-success">Увімкнено</span>
                                 {% else %}
-                                    <span class="badge badge-secondary">Вимкнено</span>
+                                    <span class="badge badge-dark">Вимкнено</span>
                                 {% endif %}
                             </li>
 
+                            {% if mod.thermostat_state %}
+                                <li>Встановлена температура:
+                                    <span class="badge badge-info">{{ mod.set_temp }}°C</span>
+                                </li>
+                            {% else %}
+                                 <li>Встановлена температура:
+                                    <span class="badge badge-secondary">{{ mod.set_temp }}°C</span>
+                                </li>
+                            {% endif %}
 
-                            <li>Встановлена температура:
-                                <span class="badge badge-info">{{ mod.set_temp }}°C</span>
-                            </li>
 
-                            <li>Встановлений рівень CO2:
-                                <span class="badge badge-dark">{{ mod.set_co2 }}</span>
-                            </li>
                             <li>Освітленість:
                                 {% if mod.light %}
-                                    <span class="badge badge-warning">Увімкнено</span>
+                                    <span class="badge badge-warning">{{ mod.get_light_mode }}</span>
                                 {% else %}
-                                    <span class="badge badge-secondary">Вимкнено</span>
+                                    <span class="badge badge-dark">Вимкнено</span>
                                 {% endif %}
                             </li>
-                            <li>Колір встановленого освітлення:
-                                <span class="light-color"
-                                      style="background-color: rgb({{ mod.light_R }}, {{ mod.light_G }}, {{ mod.light_B }})"
-                                >&nbsp;</span>
-                            </li>
+                            {% if mod.light %}
+                                <li>
+                                    Інтенсивність UV [0-255]: <span class="badge badge-violet">{{ mod.light_UV }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність R [0-255]: <span class="badge badge-red">{{ mod.light_R }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність G [0-255]: <span class="badge badge-green">{{ mod.light_G }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність B [0-255]: <span class="badge badge-blue">{{ mod.light_B }}</span>
+                                </li>
+                                <li>Колір встановленого освітлення:
+                                    <span class="light-color"
+                                          style="background-color: rgb({{ mod.light_R }}, {{ mod.light_G }}, {{ mod.light_B }})"
+                                    >&nbsp;</span>
+                                </li>
+                            {% else %}
+                                <li>
+                                    Інтенсивність UV [0-255]: <span class="badge badge-secondary">{{ mod.light_UV }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність R [0-255]: <span class="badge badge-secondary">{{ mod.light_R }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність G [0-255]: <span class="badge badge-secondary">{{ mod.light_G }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність B [0-255]: <span class="badge badge-secondary">{{ mod.light_B }}</span>
+                                </li>
+                                <li>Колір встановленого освітлення:
+                                    <span class="light-color"
+                                          style="background-color: rgb({{ mod.light_R }}, {{ mod.light_G }}, {{ mod.light_B }})"
+                                    >&nbsp;</span>
+                                </li>
+                            {% endif %}
+                            <hr>
+                            Тривалість фази:<span class="badge badge-light">&nbsp;
+                                                {{ mod.duration_d }} дн.
+                                                {{ mod.duration_h }} год.
+                                                {{ mod.duration_m }} хв.
+                                            </span>
                         </div>
 
 
                     </div>
                 </div>
             {% endfor %}
-            <div class="col-md-12">
-                <hr>
-                <h4>Неактивні фази:</h4>
-            </div>
+            {% if not_active_phases %}
+                <div class="col-md-12">
+                    <hr>
+                    <h4>Неактивні фази:</h4>
+                </div>
+            {% endif %}
+
+            {% for mod in not_active_phases %}
+                <div class="col-md-4">
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h5>
+                                <span class="badge badge-secondary">{{ mod.order_execution }}</span> {{ mod.phase_name }}
+                            </h5>
+                        </div>
+
+                        <div class="card-body">
+
+                            <li>Стан термостату:
+                                {% if mod.thermostat_state %}
+                                    <span class="badge badge-success">Увімкнено</span>
+                                {% else %}
+                                    <span class="badge badge-dark">Вимкнено</span>
+                                {% endif %}
+                            </li>
+
+                            {% if mod.thermostat_state %}
+                                <li>Встановлена температура:
+                                    <span class="badge badge-info">{{ mod.set_temp }}°C</span>
+                                </li>
+                            {% else %}
+                                 <li>Встановлена температура:
+                                    <span class="badge badge-secondary">{{ mod.set_temp }}°C</span>
+                                </li>
+                            {% endif %}
+
+
+                            <li>Освітленість:
+                                {% if mod.light %}
+                                    <span class="badge badge-warning">{{ mod.get_light_mode }}</span>
+                                {% else %}
+                                    <span class="badge badge-dark">Вимкнено</span>
+                                {% endif %}
+                            </li>
+                            {% if mod.light %}
+                                <li>
+                                    Інтенсивність UV [0-255]: <span class="badge badge-violet">{{ mod.light_UV }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність R [0-255]: <span class="badge badge-red">{{ mod.light_R }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність G [0-255]: <span class="badge badge-green">{{ mod.light_G }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність B [0-255]: <span class="badge badge-blue">{{ mod.light_B }}</span>
+                                </li>
+                                <li>Колір встановленого освітлення:
+                                    <span class="light-color"
+                                          style="background-color: rgb({{ mod.light_R }}, {{ mod.light_G }}, {{ mod.light_B }})"
+                                    >&nbsp;</span>
+                                </li>
+                            {% else %}
+                                <li>
+                                    Інтенсивність UV [0-255]: <span class="badge badge-secondary">{{ mod.light_UV }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність R [0-255]: <span class="badge badge-secondary">{{ mod.light_R }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність G [0-255]: <span class="badge badge-secondary">{{ mod.light_G }}</span>
+                                </li>
+                                <li>
+                                    Інтенсивність B [0-255]: <span class="badge badge-secondary">{{ mod.light_B }}</span>
+                                </li>
+                                <li>Колір встановленого освітлення:
+                                    <span class="light-color"
+                                          style="background-color: rgb({{ mod.light_R }}, {{ mod.light_G }}, {{ mod.light_B }})"
+                                    >&nbsp;</span>
+                                </li>
+                            {% endif %}
+                            <hr>
+                            Тривалість фази:<span class="badge badge-light">&nbsp;
+                                                {{ mod.duration_d }} дн.
+                                                {{ mod.duration_h }} год.
+                                                {{ mod.duration_m }} хв.
+                                            </span>
+                        </div>
+
+
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
